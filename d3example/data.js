@@ -1,7 +1,7 @@
 data = {
 	"nodes":[{
 		"index": 0, 
-		"name":'JJH',
+		"name":'SC1',
 		"fixed":true,
 		"type":'sc',
 		"area":'hd',
@@ -9,7 +9,7 @@ data = {
 		"y":350		
 	},{
 		"index": 1,
-		"name":"NJ02",
+		"name":"SC2",
 		"fixed":true,
 		"type":'sc',
 		"area":'hd',		
@@ -17,7 +17,7 @@ data = {
 		"y":350				
 	},{
 		"index": 2,
-		"name":"BB",
+		"name":"SC3",
 		"fixed":true,
 		"type":'sc',
 		"area":'hb',		
@@ -25,7 +25,7 @@ data = {
 		"y":450				
 	},{
 		"index": 3,
-		"name":"M1",
+		"name":"SC4",
 		"fixed":true,
 		"type":'sc',
 		"area":'hb',		
