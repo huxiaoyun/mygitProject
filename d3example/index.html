@@ -1,0 +1,128 @@
+<!docType html>
+<head>
+    <meta charset="utf-8">
+    <title>d3拓扑模型</title>
+    <script src="d3.min.js" charset="utf-8"></script>
+    <script src="data.js" charset="utf-8"></script>
+</head>
+<style type="text/css">
+.container{
+    margin:0 auto;
+    width: 900px;
+}
+.link_danger {
+    stroke: #f00;
+    stroke-width: 2.5px;
+}
+.link_idle{
+    stroke: #0f0;
+    stroke-width: 2.5px;    
+}
+.node {
+    cursor: move;
+    fill: #ccc;
+    stroke: #000;
+    stroke-width: 1.5px;
+}
+
+</style>
+<body>
+    <div id="demo" class="container"></div>
+</body>
+<script type="text/javascript">
+
+createForceSVG('demo');
+function createForceSVG(containerID){
+    var width = 800,
+        height = 800;
+
+    var force = d3.layout.force()
+        .size([width, height])
+        .charge(240)
+        .chargeDistance(20)
+        .linkStrength(0.9)
+        .friction(0.9)
+        .distance(300)
+        .gravity(0.1)
+        .theta(0.1)
+        .alpha(0.1)
+        // .linkDistance(140)
+        .on("tick", tick);
+
+    var drag = force.drag()                                               
+        .on("dragstart", dragstart);
+
+    var svg = d3.select("#"+containerID).append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var link = svg.selectAll(".link"),
+        node = svg.selectAll(".node")
+
+    constructGraph(data); 
+
+    function constructGraph(graph) {
+        force
+            .nodes(graph.nodes)
+            .links(graph.links)
+            .start();
+
+        link = link.data(graph.links)
+            .enter().append("line").attr('class','link_idle')
+            .each(function(d,i){
+                if(d.weight > 400){
+                    d3.select(this).attr('class','link_danger');
+                }else{
+                    d3.select(this).attr('class','link_idle');
+                }
+            });
+
+        link.append("text")
+            .attr("dx",20)
+            .attr("dy",20)
+            .text(function(d){ return d.weight;});
+
+        link.on("mouseover",function(d){
+            if (d3.event.defaultPrevented) return;
+            alert('链路带宽:'+d.weight);
+        });
+
+
+        node = node.data(graph.nodes)
+            .enter().append("g")
+            .attr("class","node")
+            .call(drag)
+            .on("click",function(d){
+                if (d3.event.defaultPrevented) return;
+                alert('区域:'+d.area+',类型:'+d.type);})
+        node
+            .append("image")
+            .attr("xlink:href", "https://github.com/favicon.ico")
+            .attr("x", -8)
+            .attr("y", -8)
+            .attr("width", 36)
+            .attr("height", 36)
+        node
+            .append("text")
+            .attr("dx",35)
+            .attr("dy",".35em")
+            .text(function(d) { return d.name });
+    }
+
+    function tick() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; }); 
+               
+    }
+
+    function dragstart(d) {
+        d3.select(this).classed("fixed", d.fixed = true);
+    }
+}
+</script>
+</script>
+</html>
